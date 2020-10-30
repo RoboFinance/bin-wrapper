@@ -186,7 +186,9 @@ module.exports = class BinWrapper {
 
 			return Promise.all(resultingFiles.map(fileName => {
 				return chmodAsync(path.join(this.dest(), fileName), 0o755);
-			}));
+			})).catch(err => {
+				throw err;
+			});
 		}).catch(err => {
 			throw err;
 		});
