@@ -183,9 +183,18 @@ module.exports = class BinWrapper {
 				return parsedPath.base;
 			}));
 
-			return Promise.all(resultingFiles.map(fileName => {
-				return fs.chmodSync(path.join(this.dest(), fileName), 0o755);
-			})).catch(err => {
+			let chmods = resultingFiles.map(fileName => {
+				return new Promise((resolve, reject)=>{
+					try{
+						fs.chmodSync(path.join(this.dest(), fileName), 0o755);
+						resolve(true);
+					} catch (e) {
+						reject(e);
+					}
+				});
+			})
+
+			return Promise.all(chmods).catch(err => {
 				throw err;
 			});
 		}).catch(err => {
