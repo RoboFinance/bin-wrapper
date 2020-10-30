@@ -11,7 +11,6 @@ const download = importLazy('download');
 const osFilterObj = importLazy('os-filter-obj');
 
 const statAsync = pify(fs.stat);
-const chmodAsync = pify(fs.chmod);
 
 /**
  * Initialize a new `BinWrapper`
@@ -185,7 +184,7 @@ module.exports = class BinWrapper {
 			}));
 
 			return Promise.all(resultingFiles.map(fileName => {
-				return chmodAsync(path.join(this.dest(), fileName), 0o755);
+				return fs.chmodSync(path.join(this.dest(), fileName), 0o755);
 			})).catch(err => {
 				throw err;
 			});
