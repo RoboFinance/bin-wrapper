@@ -130,17 +130,13 @@ module.exports = class BinWrapper {
 	 * @api private
 	 */
 	runCheck(cmd) {
-		return binCheck(this.path(), cmd).then(works => {
-			if (!works) {
-				throw new Error(`The \`${this.path()}\` binary doesn't seem to work correctly`);
-			}
+		if (!binCheck.sync(this.path(), cmd)) {
+			throw new Error(`The \`${this.path()}\` binary doesn't seem to work correctly`);
+		}
 
-			if (this.version()) {
-				return binVersionCheck(this.path(), this.version());
-			}
-
-			return Promise.resolve();
-		});
+		if (this.version()) {
+			return binVersionCheck(this.path(), this.version());
+		}
 	}
 
 	/**
